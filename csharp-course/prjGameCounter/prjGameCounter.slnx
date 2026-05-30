@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="ConsoleGame/ConsoleGame.csproj" />
+  <Project Path="GameCore/GameCore.csproj" />
+  <Project Path="WinFormsGame/WinFormsGame.csproj" />
+</Solution>
