@@ -1,0 +1,39 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v10.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v10.0": {
+      "ProcessMonitor.WPF/1.0.0": {
+        "dependencies": {
+          "ProcessMonitor.Core": "1.0.0"
+        },
+        "runtime": {
+          "ProcessMonitor.WPF.dll": {}
+        }
+      },
+      "ProcessMonitor.Core/1.0.0": {
+        "runtime": {
+          "ProcessMonitor.Core.dll": {
+            "assemblyVersion": "1.0.0.0",
+            "fileVersion": "1.0.0.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "ProcessMonitor.WPF/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "ProcessMonitor.Core/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    }
+  }
+}

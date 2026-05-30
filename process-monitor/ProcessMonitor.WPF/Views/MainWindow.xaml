@@ -1,0 +1,330 @@
+<Window x:Class="ProcessMonitor.WPF.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:models="clr-namespace:ProcessMonitor.Core.Models;assembly=ProcessMonitor.Core"
+        xmlns:vm="clr-namespace:ProcessMonitor.WPF.ViewModels"
+        Title="Process Monitor"
+        Width="1300" Height="820"
+        MinWidth="900" MinHeight="600"
+        WindowStartupLocation="CenterScreen">
+
+    <Window.InputBindings>
+        <KeyBinding Key="F5" Command="{Binding RefreshCommand}"/>
+        <KeyBinding Key="Delete" Command="{Binding KillProcessCommand}" CommandParameter="{Binding SelectedNode}"/>
+        <KeyBinding Key="Back" Command="{Binding NavigateUpCommand}"/>
+        <KeyBinding Key="E" Modifiers="Ctrl" Command="{Binding ExportCsvCommand}"/>
+        <KeyBinding Key="T" Modifiers="Ctrl" Command="{Binding ExportTextCommand}"/>
+        <KeyBinding Key="OemComma" Modifiers="Ctrl" Command="{Binding OpenSettingsCommand}"/>
+    </Window.InputBindings>
+
+    <DockPanel>
+        <!-- TOOLBAR (Row 0) -->
+        <Border DockPanel.Dock="Top"
+                Background="{StaticResource ToolBarBackground}"
+                BorderBrush="{StaticResource BorderBrush}"
+                BorderThickness="0,0,0,1"
+                Padding="8,6">
+            <StackPanel Orientation="Horizontal">
+                <Button Content="&#x21BB; Refresh (F5)"
+                        Command="{Binding RefreshCommand}"
+                        Style="{StaticResource AccentButton}"
+                        Margin="0,0,6,0" VerticalAlignment="Center"/>
+
+                <Button Command="{Binding ToggleAutoRefreshCommand}"
+                        Margin="0,0,6,0" VerticalAlignment="Center">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource {x:Type Button}}">
+                            <Setter Property="Content" Value="&#x23F8; Auto OFF"/>
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding AutoRefreshEnabled}" Value="True">
+                                    <Setter Property="Content" Value="&#x23F5; Auto ON"/>
+                                    <Setter Property="Background" Value="{StaticResource AccentGreen}"/>
+                                    <Setter Property="Foreground" Value="#1E1E2E"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <Button Content="&#x2715; Kill Process"
+                        Command="{Binding KillProcessCommand}"
+                        CommandParameter="{Binding SelectedNode}"
+                        Style="{StaticResource DangerButton}"
+                        Margin="0,0,6,0" VerticalAlignment="Center"/>
+
+                <Separator Margin="4,0" Width="1" Background="{StaticResource BorderBrush}"/>
+
+                <Button Content="&#x1F4BE; Export CSV"
+                        Command="{Binding ExportCsvCommand}"
+                        Margin="0,0,6,0" VerticalAlignment="Center"/>
+
+                <Button Content="Export Text"
+                        Command="{Binding ExportTextCommand}"
+                        Margin="0,0,6,0" VerticalAlignment="Center"/>
+
+                <Separator Margin="4,0" Width="1" Background="{StaticResource BorderBrush}"/>
+
+                <Button Content="&#x2699; Settings"
+                        Command="{Binding OpenSettingsCommand}"
+                        Margin="0,0,6,0" VerticalAlignment="Center"/>
+
+                <!-- Spinner while refreshing -->
+                <ProgressBar Width="80" Height="6" IsIndeterminate="True"
+                             Margin="8,0,0,0" VerticalAlignment="Center"
+                             Visibility="{Binding IsRefreshing, Converter={StaticResource BoolToVisibility}}"/>
+            </StackPanel>
+        </Border>
+
+        <!-- BREADCRUMB BAR -->
+        <Border DockPanel.Dock="Top"
+                Background="{StaticResource ThirdBackground}"
+                BorderBrush="{StaticResource BorderBrush}"
+                BorderThickness="0,0,0,1"
+                Padding="8,4"
+                Visibility="{Binding Breadcrumbs.Count, Converter={x:Null}}">
+            <StackPanel Orientation="Horizontal">
+                <Button Content="&#x2302; Root"
+                        Command="{Binding NavigateUpCommand}"
+                        Background="Transparent" BorderThickness="0"
+                        Foreground="{StaticResource AccentBlue}"
+                        Cursor="Hand" Padding="2,0"
+                        Visibility="{Binding Breadcrumbs.Count, Converter={x:Null}}"/>
+                <ItemsControl ItemsSource="{Binding Breadcrumbs}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <StackPanel Orientation="Horizontal"/>
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate DataType="{x:Type vm:BreadcrumbItem}">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text=" &gt; " Foreground="{StaticResource ForegroundMuted}" VerticalAlignment="Center"/>
+                                <Button Content="{Binding Name}"
+                                        Command="{Binding DataContext.NavigateToBreadcrumbCommand, RelativeSource={RelativeSource AncestorType=Window}}"
+                                        CommandParameter="{Binding}"
+                                        Background="Transparent" BorderThickness="0"
+                                        Foreground="{StaticResource AccentBlue}"
+                                        Cursor="Hand" Padding="2,0"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </StackPanel>
+        </Border>
+
+        <!-- STATUS BAR (bottom) -->
+        <StatusBar DockPanel.Dock="Bottom">
+            <StatusBarItem>
+                <TextBlock Text="{Binding StatusText}"/>
+            </StatusBarItem>
+        </StatusBar>
+
+        <!-- MAIN CONTENT (Row 1) -->
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="260" MinWidth="150"/>
+                <ColumnDefinition Width="5"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- LEFT: TreeView -->
+            <Border Grid.Column="0"
+                    BorderBrush="{StaticResource BorderBrush}"
+                    BorderThickness="0,0,1,0">
+                <TreeView x:Name="ProcessTree"
+                          Background="{StaticResource SecondaryBackground}"
+                          SelectedItemChanged="ProcessTree_SelectedItemChanged">
+                    <TreeView.ItemTemplate>
+                        <HierarchicalDataTemplate DataType="{x:Type models:ProcessNode}"
+                                                  ItemsSource="{Binding Children}">
+                            <StackPanel Orientation="Horizontal" Margin="0,1">
+                                <TextBlock Margin="0,0,4,0">
+                                    <Run Text="{Binding Name}"/>
+                                    <Run Text=" "/>
+                                    <Run Text="{Binding Pid}" Foreground="{StaticResource SecondaryForeground}"/>
+                                </TextBlock>
+                            </StackPanel>
+                        </HierarchicalDataTemplate>
+                    </TreeView.ItemTemplate>
+                </TreeView>
+            </Border>
+
+            <GridSplitter Grid.Column="1" Width="5" HorizontalAlignment="Stretch"
+                          Background="{StaticResource BorderBrush}"/>
+
+            <!-- RIGHT: Sort buttons + DataGrid -->
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- Sort bar -->
+                <Border Grid.Row="0"
+                        Background="{StaticResource SurfaceBackground}"
+                        BorderBrush="{StaticResource BorderBrush}"
+                        BorderThickness="0,0,0,1"
+                        Padding="6,4">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Sort: " Foreground="{StaticResource SecondaryForeground}" VerticalAlignment="Center"/>
+                        <Button Content="CPU &#x25BC;" Margin="4,0" Padding="6,2"
+                                Command="{Binding SortCommand}" CommandParameter="{x:Static models:SortMode.ByCpuDescending}"/>
+                        <Button Content="Memory &#x25BC;" Margin="4,0" Padding="6,2"
+                                Command="{Binding SortCommand}" CommandParameter="{x:Static models:SortMode.ByMemoryDescending}"/>
+                        <Button Content="Name A-Z" Margin="4,0" Padding="6,2"
+                                Command="{Binding SortCommand}" CommandParameter="{x:Static models:SortMode.ByNameAscending}"/>
+                        <Button Content="Name Z-A" Margin="4,0" Padding="6,2"
+                                Command="{Binding SortCommand}" CommandParameter="{x:Static models:SortMode.ByNameDescending}"/>
+                        <Button Content="PID &#x25B2;" Margin="4,0" Padding="6,2"
+                                Command="{Binding SortCommand}" CommandParameter="{x:Static models:SortMode.ByPidAscending}"/>
+                        <Separator Margin="6,0" Width="1"/>
+                        <Button Content="&#x21B5; Navigate Into"
+                                Margin="4,0" Padding="6,2"
+                                Command="{Binding NavigateIntoCommand}"
+                                CommandParameter="{Binding SelectedNode}"/>
+                        <Button Content="&#x21B6; Up"
+                                Margin="4,0" Padding="6,2"
+                                Command="{Binding NavigateUpCommand}"/>
+                    </StackPanel>
+                </Border>
+
+                <!-- DataGrid -->
+                <DataGrid Grid.Row="1" x:Name="ProcessGrid"
+                          ItemsSource="{Binding CurrentLevelItems}"
+                          SelectedItem="{Binding SelectedNode}"
+                          MouseDoubleClick="ProcessGrid_MouseDoubleClick">
+                    <DataGrid.ContextMenu>
+                        <ContextMenu>
+                            <MenuItem Header="&#x21BB; Refresh"
+                                      Command="{Binding DataContext.RefreshCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                            <MenuItem Header="&#x2715; Kill Process"
+                                      Command="{Binding DataContext.KillProcessCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      CommandParameter="{Binding DataContext.SelectedNode, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                            <Separator/>
+                            <MenuItem Header="Navigate Into"
+                                      Command="{Binding DataContext.NavigateIntoCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"
+                                      CommandParameter="{Binding DataContext.SelectedNode, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                            <MenuItem Header="Open in Explorer"
+                                      Command="{Binding DataContext.OpenInExplorerCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                            <MenuItem Header="Copy PID"
+                                      Command="{Binding DataContext.CopyPidCommand, RelativeSource={RelativeSource AncestorType=ContextMenu}}"/>
+                        </ContextMenu>
+                    </DataGrid.ContextMenu>
+                    <DataGrid.Columns>
+                        <!-- Name -->
+                        <DataGridTextColumn Header="Name" Width="*"
+                                            Binding="{Binding Name}" IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="{StaticResource PrimaryForeground}"/>
+                                    <Setter Property="FontWeight" Value="SemiBold"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <!-- PID -->
+                        <DataGridTextColumn Header="PID" Width="60"
+                                            Binding="{Binding Pid}" IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="TextAlignment" Value="Right"/>
+                                    <Setter Property="FontFamily" Value="Consolas"/>
+                                    <Setter Property="Foreground" Value="{StaticResource SecondaryForeground}"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <!-- CPU% with color -->
+                        <DataGridTemplateColumn Header="CPU%" Width="70">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <TextBlock Text="{Binding FormattedCpu}"
+                                               Foreground="{Binding CpuPercent, Converter={StaticResource CpuToColor}}"
+                                               FontFamily="Consolas"
+                                               TextAlignment="Right"
+                                               HorizontalAlignment="Right"
+                                               Margin="4,0"/>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!-- Memory with mini bar -->
+                        <DataGridTemplateColumn Header="Memory" Width="140">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Grid>
+                                        <!-- Mini bar background -->
+                                        <Border Background="{StaticResource ProgressBackground}"
+                                                Height="16" HorizontalAlignment="Left"
+                                                Width="200" CornerRadius="2" Margin="2,0"/>
+                                        <!-- Mini bar fill -->
+                                        <Border Background="{StaticResource AccentBlue}"
+                                                Height="16" HorizontalAlignment="Left"
+                                                CornerRadius="2" Margin="2,0" Opacity="0.5">
+                                            <Border.Width>
+                                                <Binding Path="MemoryBytes" Converter="{StaticResource MemoryToWidth}"/>
+                                            </Border.Width>
+                                        </Border>
+                                        <!-- Memory text overlay -->
+                                        <TextBlock Text="{Binding FormattedMemory}"
+                                                   FontFamily="Consolas" FontSize="11"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"
+                                                   Foreground="{StaticResource PrimaryForeground}"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
+
+                        <!-- Status -->
+                        <DataGridTextColumn Header="Status" Width="70"
+                                            Binding="{Binding Status}" IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="{StaticResource AccentGreen}"/>
+                                    <Setter Property="FontSize" Value="11"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <!-- Start Time -->
+                        <DataGridTextColumn Header="Started" Width="70"
+                                            Binding="{Binding FormattedStartTime}" IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="{StaticResource SecondaryForeground}"/>
+                                    <Setter Property="FontFamily" Value="Consolas"/>
+                                    <Setter Property="FontSize" Value="11"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <!-- Children count -->
+                        <DataGridTextColumn Header="Chld" Width="45"
+                                            Binding="{Binding ChildCount}" IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="TextAlignment" Value="Right"/>
+                                    <Setter Property="Foreground" Value="{StaticResource ForegroundMuted}"/>
+                                    <Setter Property="FontSize" Value="11"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+
+                        <!-- Path -->
+                        <DataGridTextColumn Header="Path" Width="*"
+                                            Binding="{Binding ExecutablePath}" IsReadOnly="True">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="Foreground" Value="{StaticResource ForegroundMuted}"/>
+                                    <Setter Property="FontSize" Value="11"/>
+                                    <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                                </Style>
+                            </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
+                    </DataGrid.Columns>
+                </DataGrid>
+            </Grid>
+        </Grid>
+    </DockPanel>
+</Window>

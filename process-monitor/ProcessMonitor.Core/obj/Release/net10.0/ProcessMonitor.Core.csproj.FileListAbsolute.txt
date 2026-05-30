@@ -1,0 +1,12 @@
+C:\dev\csharp-projects\griha\csharp\process-monitor\ProcessMonitor.Core\bin\Release\net10.0\ProcessMonitor.Core.deps.json
+C:\dev\csharp-projects\griha\csharp\process-monitor\ProcessMonitor.Core\bin\Release\net10.0\ProcessMonitor.Core.dll
+C:\dev\csharp-projects\griha\csharp\process-monitor\ProcessMonitor.Core\bin\Release\net10.0\ProcessMonitor.Core.pdb
+C:\dev\csharp-projects\griha\csharp\process-monitor\ProcessMonitor.Core\obj\Release\net10.0\ProcessMonitor.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\dev\csharp-projects\griha\csharp\process-monitor\ProcessMonitor.Core\obj\Release\net10.0\ProcessMonitor.Core.AssemblyInfoInputs.cache
+C:\dev\csharp-projects\griha\csharp\process-monitor\ProcessMonitor.Core\obj\Release\net10.0\ProcessMonitor.Core.AssemblyInfo.cs
+C:\dev\csharp-projects\griha\csharp\process-monitor\ProcessMonitor.Core\obj\Release\net10.0\ProcessMonitor.Core.csproj.CoreCompileInputs.cache
+C:\dev\csharp-projects\griha\csharp\process-monitor\ProcessMonitor.Core\obj\Release\net10.0\ProcessMonitor.Core.sourcelink.json
+C:\dev\csharp-projects\griha\csharp\process-monitor\ProcessMonitor.Core\obj\Release\net10.0\ProcessMonitor.Core.dll
+C:\dev\csharp-projects\griha\csharp\process-monitor\ProcessMonitor.Core\obj\Release\net10.0\refint\ProcessMonitor.Core.dll
+C:\dev\csharp-projects\griha\csharp\process-monitor\ProcessMonitor.Core\obj\Release\net10.0\ProcessMonitor.Core.pdb
+C:\dev\csharp-projects\griha\csharp\process-monitor\ProcessMonitor.Core\obj\Release\net10.0\ref\ProcessMonitor.Core.dll

@@ -1,0 +1,2 @@
+C:\dev\csharp-projects\griha\csharp\process-monitor\publish\ProcessMonitor.WPF.pdb
+C:\dev\csharp-projects\griha\csharp\process-monitor\publish\ProcessMonitor.WPF.exe
