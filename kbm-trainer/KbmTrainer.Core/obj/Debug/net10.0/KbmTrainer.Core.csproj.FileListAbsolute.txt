@@ -1,0 +1,12 @@
+C:\dev\csharp-projects\griha\csharp\kbm-trainer\KbmTrainer.Core\bin\Debug\net10.0\KbmTrainer.Core.deps.json
+C:\dev\csharp-projects\griha\csharp\kbm-trainer\KbmTrainer.Core\bin\Debug\net10.0\KbmTrainer.Core.dll
+C:\dev\csharp-projects\griha\csharp\kbm-trainer\KbmTrainer.Core\bin\Debug\net10.0\KbmTrainer.Core.pdb
+C:\dev\csharp-projects\griha\csharp\kbm-trainer\KbmTrainer.Core\obj\Debug\net10.0\KbmTrainer.Core.GeneratedMSBuildEditorConfig.editorconfig
+C:\dev\csharp-projects\griha\csharp\kbm-trainer\KbmTrainer.Core\obj\Debug\net10.0\KbmTrainer.Core.AssemblyInfoInputs.cache
+C:\dev\csharp-projects\griha\csharp\kbm-trainer\KbmTrainer.Core\obj\Debug\net10.0\KbmTrainer.Core.AssemblyInfo.cs
+C:\dev\csharp-projects\griha\csharp\kbm-trainer\KbmTrainer.Core\obj\Debug\net10.0\KbmTrainer.Core.csproj.CoreCompileInputs.cache
+C:\dev\csharp-projects\griha\csharp\kbm-trainer\KbmTrainer.Core\obj\Debug\net10.0\KbmTrainer.Core.sourcelink.json
+C:\dev\csharp-projects\griha\csharp\kbm-trainer\KbmTrainer.Core\obj\Debug\net10.0\KbmTrainer.Core.dll
+C:\dev\csharp-projects\griha\csharp\kbm-trainer\KbmTrainer.Core\obj\Debug\net10.0\refint\KbmTrainer.Core.dll
+C:\dev\csharp-projects\griha\csharp\kbm-trainer\KbmTrainer.Core\obj\Debug\net10.0\KbmTrainer.Core.pdb
+C:\dev\csharp-projects\griha\csharp\kbm-trainer\KbmTrainer.Core\obj\Debug\net10.0\ref\KbmTrainer.Core.dll

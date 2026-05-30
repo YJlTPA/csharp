@@ -1,0 +1,128 @@
+<UserControl x:Class="KbmTrainer.WPF.Views.DictionaryEditorView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="Transparent">
+
+    <Grid Margin="32,24,32,24">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <StackPanel Grid.Row="0" Margin="0,0,0,24">
+            <TextBlock Text="Dictionary Editor"
+                       FontSize="26"
+                       FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextPrimary}"/>
+            <TextBlock Text="{Binding StatusMessage}"
+                       FontSize="13"
+                       Foreground="{DynamicResource AccentColor}"
+                       Margin="0,4,0,0"/>
+        </StackPanel>
+
+        <!-- Two-column layout -->
+        <Grid Grid.Row="1">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="260"/>
+                <ColumnDefinition Width="16"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Left: dictionary list -->
+            <Grid Grid.Column="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <ListBox Grid.Row="0"
+                         ItemsSource="{Binding Dictionaries}"
+                         SelectedItem="{Binding SelectedDictionary}"
+                         DisplayMemberPath="Name"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto"/>
+
+                <!-- Add new dictionary -->
+                <StackPanel Grid.Row="1" Margin="0,12,0,0">
+                    <TextBlock Text="New dictionary name:"
+                               FontSize="12"
+                               Foreground="{DynamicResource TextMuted}"
+                               Margin="0,0,0,4"/>
+                    <TextBox Text="{Binding NewDictionaryName, UpdateSourceTrigger=PropertyChanged}"
+                             Margin="0,0,0,6"/>
+                    <Button Content="+ Add Dictionary"
+                            Command="{Binding AddDictionaryCommand}"
+                            HorizontalAlignment="Stretch"/>
+                </StackPanel>
+
+                <!-- Delete button -->
+                <Button Grid.Row="2"
+                        Content="Delete Selected"
+                        Command="{Binding DeleteDictionaryCommand}"
+                        Margin="0,8,0,0"
+                        HorizontalAlignment="Stretch"
+                        Foreground="{DynamicResource IncorrectColor}"
+                        BorderBrush="{DynamicResource IncorrectColor}"/>
+            </Grid>
+
+            <!-- Right: words editor -->
+            <Grid Grid.Column="2">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <!-- Dictionary name edit -->
+                <StackPanel Grid.Row="0" Margin="0,0,0,16">
+                    <TextBlock Text="Dictionary Name:"
+                               FontSize="12"
+                               Foreground="{DynamicResource TextMuted}"
+                               Margin="0,0,0,4"/>
+                    <Grid>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0"
+                                 Text="{Binding SelectedDictionaryName, UpdateSourceTrigger=PropertyChanged}"
+                                 Margin="0,0,8,0"/>
+                        <Button Grid.Column="1"
+                                Content="Rename"
+                                Command="{Binding RenameDictionaryCommand}"
+                                Padding="14,6"/>
+                    </Grid>
+                </StackPanel>
+
+                <!-- Words label -->
+                <TextBlock Grid.Row="1"
+                           FontSize="12"
+                           Foreground="{DynamicResource TextMuted}"
+                           Margin="0,0,0,6">
+                    Words (one per line):
+                </TextBlock>
+
+                <!-- Words text area -->
+                <TextBox Grid.Row="2"
+                         Text="{Binding WordsText, UpdateSourceTrigger=PropertyChanged}"
+                         AcceptsReturn="True"
+                         TextWrapping="Wrap"
+                         VerticalScrollBarVisibility="Auto"
+                         FontFamily="Consolas"
+                         FontSize="13"
+                         Padding="10,8"/>
+
+                <!-- Save button -->
+                <Button Grid.Row="3"
+                        Content="Save Words"
+                        Command="{Binding SaveDictionaryCommand}"
+                        Style="{StaticResource AccentButton}"
+                        HorizontalAlignment="Right"
+                        Margin="0,12,0,0"
+                        Padding="20,10"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

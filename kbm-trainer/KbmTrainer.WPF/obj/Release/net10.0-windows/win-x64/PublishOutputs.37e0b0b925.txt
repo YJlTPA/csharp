@@ -1,0 +1,3 @@
+C:\dev\csharp-projects\griha\csharp\kbm-trainer\publish\KbmTrainer.WPF.pdb
+C:\dev\csharp-projects\griha\csharp\kbm-trainer\publish\KbmTrainer.Core.pdb
+C:\dev\csharp-projects\griha\csharp\kbm-trainer\publish\KbmTrainer.WPF.exe

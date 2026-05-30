@@ -1,0 +1,162 @@
+<UserControl x:Class="KbmTrainer.WPF.Views.SettingsView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             Background="Transparent">
+
+    <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <StackPanel Margin="40,32,40,32" MaxWidth="520">
+
+            <!-- Header -->
+            <TextBlock Text="Settings"
+                       FontSize="26"
+                       FontWeight="SemiBold"
+                       Foreground="{DynamicResource TextPrimary}"
+                       Margin="0,0,0,32"/>
+
+            <!-- Theme -->
+            <Border Background="{DynamicResource SecondaryBackground}"
+                    CornerRadius="10"
+                    Padding="20,16"
+                    Margin="0,0,0,16">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="160"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock Text="Theme"
+                                   FontSize="15"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextPrimary}"/>
+                        <TextBlock Text="Choose between dark and light interface"
+                                   FontSize="12"
+                                   Foreground="{DynamicResource TextMuted}"
+                                   Margin="0,4,0,0"/>
+                    </StackPanel>
+                    <ComboBox Grid.Column="1"
+                              ItemsSource="{Binding Themes}"
+                              SelectedItem="{Binding Theme}"
+                              VerticalAlignment="Center"/>
+                </Grid>
+            </Border>
+
+            <!-- Font Size -->
+            <Border Background="{DynamicResource SecondaryBackground}"
+                    CornerRadius="10"
+                    Padding="20,16"
+                    Margin="0,0,0,16">
+                <StackPanel>
+                    <Grid Margin="0,0,0,10">
+                        <TextBlock Text="Font Size"
+                                   FontSize="15"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextPrimary}"/>
+                        <TextBlock HorizontalAlignment="Right"
+                                   FontSize="15"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource AccentColor}">
+                            <TextBlock.Text>
+                                <Binding Path="FontSize" StringFormat="{}{0:F0}px"/>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </Grid>
+                    <TextBlock Text="Size of the typing text (14–36)"
+                               FontSize="12"
+                               Foreground="{DynamicResource TextMuted}"
+                               Margin="0,0,0,10"/>
+                    <Slider Minimum="14"
+                            Maximum="36"
+                            Value="{Binding FontSize}"
+                            TickFrequency="1"
+                            IsSnapToTickEnabled="True"
+                            LargeChange="2"
+                            SmallChange="1"/>
+                    <Grid Margin="0,4,0,0">
+                        <TextBlock Text="14" FontSize="11" Foreground="{DynamicResource TextMuted}"/>
+                        <TextBlock Text="36" FontSize="11" Foreground="{DynamicResource TextMuted}" HorizontalAlignment="Right"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Text Length -->
+            <Border Background="{DynamicResource SecondaryBackground}"
+                    CornerRadius="10"
+                    Padding="20,16"
+                    Margin="0,0,0,16">
+                <StackPanel>
+                    <Grid Margin="0,0,0,10">
+                        <TextBlock Text="Text Length"
+                                   FontSize="15"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextPrimary}"/>
+                        <TextBlock HorizontalAlignment="Right"
+                                   FontSize="15"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource AccentColor}">
+                            <TextBlock.Text>
+                                <Binding Path="TextLength" StringFormat="{}{0} words"/>
+                            </TextBlock.Text>
+                        </TextBlock>
+                    </Grid>
+                    <TextBlock Text="Number of words in each typing session (20–200)"
+                               FontSize="12"
+                               Foreground="{DynamicResource TextMuted}"
+                               Margin="0,0,0,10"/>
+                    <Slider Minimum="20"
+                            Maximum="200"
+                            Value="{Binding TextLength}"
+                            TickFrequency="5"
+                            IsSnapToTickEnabled="True"
+                            LargeChange="10"
+                            SmallChange="5"/>
+                    <Grid Margin="0,4,0,0">
+                        <TextBlock Text="20" FontSize="11" Foreground="{DynamicResource TextMuted}"/>
+                        <TextBlock Text="200" FontSize="11" Foreground="{DynamicResource TextMuted}" HorizontalAlignment="Right"/>
+                    </Grid>
+                </StackPanel>
+            </Border>
+
+            <!-- Show Virtual Keyboard -->
+            <Border Background="{DynamicResource SecondaryBackground}"
+                    CornerRadius="10"
+                    Padding="20,16"
+                    Margin="0,0,0,24">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel>
+                        <TextBlock Text="Show Virtual Keyboard"
+                                   FontSize="15"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource TextPrimary}"/>
+                        <TextBlock Text="Display keyboard layout below the text (stub)"
+                                   FontSize="12"
+                                   Foreground="{DynamicResource TextMuted}"
+                                   Margin="0,4,0,0"/>
+                    </StackPanel>
+                    <CheckBox Grid.Column="1"
+                              IsChecked="{Binding ShowKeyboard}"
+                              VerticalAlignment="Center"/>
+                </Grid>
+            </Border>
+
+            <!-- Status message -->
+            <TextBlock Text="{Binding StatusMessage}"
+                       FontSize="13"
+                       Foreground="{DynamicResource AccentColor}"
+                       HorizontalAlignment="Center"
+                       Margin="0,0,0,16"/>
+
+            <!-- Save button -->
+            <Button Content="Save Settings"
+                    Command="{Binding SaveCommand}"
+                    Style="{StaticResource AccentButton}"
+                    HorizontalAlignment="Center"
+                    Padding="32,12"
+                    FontSize="15"/>
+
+        </StackPanel>
+    </ScrollViewer>
+</UserControl>

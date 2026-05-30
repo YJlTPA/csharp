@@ -1,0 +1,34 @@
+<Application x:Class="KbmTrainer.WPF.App"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="clr-namespace:KbmTrainer.WPF.ViewModels"
+             xmlns:views="clr-namespace:KbmTrainer.WPF.Views"
+             xmlns:conv="clr-namespace:KbmTrainer.WPF.Converters"
+             StartupUri="Views/MainWindow.xaml">
+    <Application.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="Themes/DarkTheme.xaml"/>
+            </ResourceDictionary.MergedDictionaries>
+
+            <!-- Converters -->
+            <conv:CharStateToColorConverter x:Key="CharStateToColorConverter"/>
+            <conv:BoolToVisibilityConverter x:Key="BoolToVisibilityConverter"/>
+            <conv:BoolToVisibilityConverter x:Key="InverseBoolToVisibilityConverter" Invert="True"/>
+
+            <!-- DataTemplates mapping ViewModels to Views -->
+            <DataTemplate DataType="{x:Type vm:TypingViewModel}">
+                <views:TypingView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:DictionaryEditorViewModel}">
+                <views:DictionaryEditorView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:StatisticsViewModel}">
+                <views:StatisticsView/>
+            </DataTemplate>
+            <DataTemplate DataType="{x:Type vm:SettingsViewModel}">
+                <views:SettingsView/>
+            </DataTemplate>
+        </ResourceDictionary>
+    </Application.Resources>
+</Application>
